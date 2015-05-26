@@ -18,7 +18,9 @@ namespace ContaTamanhoCSV
                 var tamanhos = new List<int>();
                 var reader = new StreamReader(File.OpenRead(args[0]));
 
+                Console.WriteLine();
                 Console.WriteLine("Processando {0}...", args[0]);
+                Console.WriteLine();
 
                 while (!reader.EndOfStream)
                 {
@@ -52,34 +54,40 @@ namespace ContaTamanhoCSV
                         }
 
                         // Exibe o contador.
-                        if (count % 100000 == 0) Console.WriteLine("Processado arquivo {0} ...", count);
+                        if (count % 100000 == 0) Console.WriteLine("Processado linha {0:#,0} ...", count);
                     }
                 }
 
                 // Conclusão, exibe os tamanhos máximos das colunas:
-                Console.WriteLine("Processadas {0:#,0} linhas.", count);
-                Console.WriteLine("Tamanho máximo das colunas: ");
+                Console.WriteLine("Processadas {0:#,0} linhas.\n", count);
+                Console.WriteLine("-- Tamanho máximo das colunas: ");
                 for (int i = 0; i < colunas.Count; i++)
                 {
-                    Console.WriteLine("- Coluna \"{0}\" --> {1:#,0} caracteres.", colunas[i], tamanhos[i]);
+                    Console.WriteLine("-- Coluna \"{0}\" --> {1:#,0} caracteres.", colunas[i], tamanhos[i]);
                 }
             }
             catch (IndexOutOfRangeException)
             {
+                Console.WriteLine();
                 Console.WriteLine(@"Uso: ContaTamanhoCSV <caminho_arquivo_csv>");
                 Console.WriteLine();
                 Console.WriteLine(@"  Exemplos:");
-                Console.WriteLine(@"     ContaTamanhoCSV arquivo.csv");
-                Console.WriteLine(@"     ContaTamanhoCSV c:\pasta1\pasta2\arquivo.csv");
-                Console.WriteLine(@"     ContaTamanhoCSV ..\pastaX\arquivo.csv");
+                Console.WriteLine(@"    ContaTamanhoCSV arquivo.csv");
+                Console.WriteLine(@"    ContaTamanhoCSV c:\pasta1\pasta2\arquivo.csv");
+                Console.WriteLine(@"    ContaTamanhoCSV ..\pastaX\arquivo.csv");
+                Console.WriteLine();
             }
             catch (FileNotFoundException)
             {
+                Console.WriteLine();
                 Console.WriteLine(@"ERRO: O arquivo {0} não pode ser encontrado.", args[0]);
+                Console.WriteLine();
             }
             catch (Exception e)
             {
+                Console.WriteLine();
                 Console.WriteLine(@"ERRO: Ocorreu um erro não esperado: {0}", e.Message);
+                Console.WriteLine();
             }
 
 #if DEBUG
