@@ -14,6 +14,7 @@ namespace ContaTamanhoCSV
             try
             {
                 long count = 0;
+                var colunas = new List<string>();
                 var tamanhos = new List<int>();
                 var reader = new StreamReader(File.OpenRead(args[0]));
 
@@ -25,31 +26,42 @@ namespace ContaTamanhoCSV
                     var line = reader.ReadLine();
                     var values = line.Split(';');
 
-                    // Verifica se é necessário crescer a lista
-                    if (values.Length > tamanhos.Count)
+                    // Verifica se é a primeira linha (cabeçalho) e guarda os nomes das colunas
+                    if (count == 1)
                     {
-                        for (int i = tamanhos.Count; i < values.Length; i++)
+                        colunas.AddRange(values);
+                    }
+                    else
+                    {
+                        // Verifica se a linha tem mais colunas do que deveria.
+                        if (values.Length > colunas.Count) Console.WriteLine("AVISO: A linha {0:0,0} possui colunas excedentes.", count);
+                        
+                        // Verifica se é necessário crescer a lista
+                        if (values.Length > tamanhos.Count)
                         {
-                            tamanhos.Add(0);
+                            for (int i = tamanhos.Count; i < values.Length; i++)
+                            {
+                                tamanhos.Add(0);
+                            }
                         }
-                    }
 
-                    // Atualiza o tamanho máximo das colunas
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i].Length > tamanhos[i]) tamanhos[i] = values[i].Length;
-                    }
+                        // Atualiza o tamanho máximo das colunas
+                        for (int i = 0; i < values.Length; i++)
+                        {
+                            if (values[i].Length > tamanhos[i]) tamanhos[i] = values[i].Length;
+                        }
 
-                    // Exibe o contador.
-                    if (count % 100000 == 0) Console.WriteLine("Processado arquivo {0} ...", count);
+                        // Exibe o contador.
+                        if (count % 100000 == 0) Console.WriteLine("Processado arquivo {0} ...", count);
+                    }
                 }
 
                 // Conclusão, exibe os tamanhos máximos das colunas:
-                Console.WriteLine("Processadas {0:9,990} linhas.", count);
+                Console.WriteLine("Processadas {0:#,0} linhas.", count);
                 Console.WriteLine("Tamanho máximo das colunas: ");
-                for (int i = 0; i < tamanhos.Count; i++)
+                for (int i = 0; i < colunas.Count; i++)
                 {
-                    Console.WriteLine("- Coluna {0} : {1} caracteres.", i, tamanhos[i]);
+                    Console.WriteLine("- Coluna \"{0}\" --> {1:#,0} caracteres.", colunas[i], tamanhos[i]);
                 }
             }
             catch (IndexOutOfRangeException)
